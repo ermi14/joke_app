@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1010594272990",
+    "project_id": "joke-pp",
+    "storage_bucket": "joke-pp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010594272990:android:4a95f7496ddf8d9da0d44f",
+        "android_client_info": {
+          "package_name": "com.example.joke_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010594272990-1ab7fmouj7li91gu1ked13n4d4dmcrvk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXwExJuSPk4Ux6Vk4FPvHt5v32EMnGp1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010594272990-1ab7fmouj7li91gu1ked13n4d4dmcrvk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
