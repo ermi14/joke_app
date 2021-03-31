@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joke_app/blocs/authentication/auth_bloc.dart';
 import 'package:joke_app/blocs/joke/joke_bloc.dart';
 import 'package:joke_app/presentation/widgets/joke_card.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatelessWidget {
   final User user;
@@ -43,16 +44,7 @@ class HomePage extends StatelessWidget {
               );
             } else if (state is JokeLoadingState) {
               return Center(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  height: 80,
-                  width: 80,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.lightBlue.shade300),
-                  ),
-                ),
+                child: _buildShimmer(),
               );
             } else if (state is JokeLoadedState) {
               return JokeCard(
@@ -71,6 +63,67 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildShimmer() {
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, 2), color: Colors.black45, blurRadius: 6)
+            ]),
+        child: Shimmer.fromColors(
+          baseColor: Colors.black26,
+          highlightColor: Colors.black12,
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: 180,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        ),
+        );
   }
 
   GestureDetector _getJokeButton(BuildContext context) {
