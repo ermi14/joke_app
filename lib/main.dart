@@ -1,19 +1,32 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joke_app/blocs/authentication/auth_bloc.dart';
 import 'package:joke_app/blocs/bloc_observer.dart';
 import 'package:joke_app/blocs/joke/joke_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:joke_app/data/data_providers/joke_api.dart';
+import 'package:joke_app/data/models/saved_joke.dart';
 import 'package:joke_app/data/repositories/jokes_repository.dart';
 import 'package:joke_app/data/repositories/user_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:joke_app/presentation/pages/home_page.dart';
+import 'package:path_provider/path_provider.dart';
 import 'presentation/pages/login_page.dart';
 
 void main() async {
   Bloc.observer = SimpleBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+
+  Directory directory = await getApplicationDocumentsDirectory();
+  Hive
+    ..init(directory.path)
+    ..registerAdapter(SavedJokeAdapter());
+  await Hive.openBox<SavedJoke>('jokes');
+  
   final UserRepository userRepository = UserRepository();
   runApp(MyApp(
     userRepository: userRepository,
