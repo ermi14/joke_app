@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:joke_app/blocs/authentication/auth_bloc.dart';
 import 'package:joke_app/blocs/joke/joke_bloc.dart';
 import 'package:joke_app/data/models/saved_joke.dart';
+import 'package:joke_app/presentation/pages/saved_jokes_page.dart';
 import 'package:joke_app/presentation/widgets/joke_card.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -58,132 +59,137 @@ class HomePage extends StatelessWidget {
           ),
 
           /////////// Save to local db(hive)
-          GestureDetector(
-              onTap: () async {
-                try {
-                  if (Hive.isBoxOpen('jokes')) {
-                    jokesBox = Hive.box<SavedJoke>('jokes');
-                    jokesBox.put(
-                      BlocProvider.of<JokeBloc>(context).joke.id,
-                      SavedJoke(
-                        id: BlocProvider.of<JokeBloc>(context)
-                            .joke
-                            .id
-                            .toString(),
-                        body: BlocProvider.of<JokeBloc>(context).joke.joke,
-                      ),
-                    );
-
-                    print(jokesBox
-                        .get(BlocProvider.of<JokeBloc>(context).joke.id));
-                  } else {
-                    print('Box is not opened');
-                  }
-                } catch (err, stackTrace) {
-                  print(err.message);
-                  print(stackTrace);
-                }
-              },
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                width: double.infinity,
-                height: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.lightBlue.shade400,
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      letterSpacing: 0.6),
-                ),
-              )),
+          _savebutton(jokesBox, context),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              child: Center(
-                child: Text(
-                  'Jokes App',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 36,
-                      letterSpacing: 0.6),
+      drawer: _buildDrawer(context),
+    );
+  }
+
+  GestureDetector _savebutton(Box<SavedJoke> jokesBox, BuildContext context) {
+    return GestureDetector(
+        onTap: () async {
+          try {
+            if (Hive.isBoxOpen('jokes') &&
+                BlocProvider.of<JokeBloc>(context).joke.id != null) {
+              jokesBox = Hive.box<SavedJoke>('jokes');
+              jokesBox.put(
+                BlocProvider.of<JokeBloc>(context).joke.id,
+                SavedJoke(
+                  id: BlocProvider.of<JokeBloc>(context).joke.id.toString(),
+                  body: BlocProvider.of<JokeBloc>(context).joke.joke,
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.lightBlue.shade400,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Saved Jokes',
+              );
+              print(jokesBox.get(BlocProvider.of<JokeBloc>(context).joke.id));
+            } else {
+              print('Box is not opened');
+            }
+          } catch (err, stackTrace) {
+            print(err.message);
+            print(stackTrace);
+          }
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          width: double.infinity,
+          height: 50,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Colors.lightBlue.shade400,
+              borderRadius: BorderRadius.circular(8)),
+          child: Text(
+            'Save',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                letterSpacing: 0.6),
+          ),
+        ));
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Center(
+              child: Text(
+                'Jokes App',
                 style: TextStyle(
-                    color: Colors.lightBlue.shade400,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 36,
                     letterSpacing: 0.6),
               ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
             ),
-            Divider(),
-            ListTile(
-              title: Text(
-                'About',
-                style: TextStyle(
-                    color: Colors.lightBlue.shade400,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    letterSpacing: 0.6),
-              ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+            decoration: BoxDecoration(
+              color: Colors.lightBlue.shade400,
             ),
-            Divider(),
-            ListTile(
-              title: Text(
-                'Contact',
-                style: TextStyle(
-                    color: Colors.lightBlue.shade400,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    letterSpacing: 0.6),
-              ),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+          ),
+          ListTile(
+            title: Text(
+              'Saved Jokes',
+              style: TextStyle(
+                  color: Colors.lightBlue.shade400,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.6),
             ),
-            Divider(),
-            ListTile(
-              title: Text(
-                'Sign out',
-                style: TextStyle(
-                    color: Colors.lightBlue.shade400,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    letterSpacing: 0.6),
-              ),
-              onTap: () {
-                BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
-              },
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return SavedJokesPage();
+              }));
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text(
+              'About',
+              style: TextStyle(
+                  color: Colors.lightBlue.shade400,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.6),
             ),
-            Divider(),
-          ],
-        ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text(
+              'Contact',
+              style: TextStyle(
+                  color: Colors.lightBlue.shade400,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.6),
+            ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text(
+              'Sign out',
+              style: TextStyle(
+                  color: Colors.lightBlue.shade400,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.6),
+            ),
+            onTap: () {
+              BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
+            },
+          ),
+          Divider(),
+        ],
       ),
     );
   }
