@@ -18,22 +18,12 @@ class HomePage extends StatelessWidget {
     Box<SavedJoke> jokesBox;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Home',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
-            },
-          )
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -113,6 +103,87 @@ class HomePage extends StatelessWidget {
                 ),
               )),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Center(
+                child: Text(
+                  'Jokes App',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 36,
+                      letterSpacing: 0.6),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.lightBlue.shade400,
+              ),
+            ),
+            ListTile(
+              title: Text(
+                'Saved Jokes',
+                style: TextStyle(
+                    color: Colors.lightBlue.shade400,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 0.6),
+              ),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text(
+                'About',
+                style: TextStyle(
+                    color: Colors.lightBlue.shade400,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 0.6),
+              ),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text(
+                'Contact',
+                style: TextStyle(
+                    color: Colors.lightBlue.shade400,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 0.6),
+              ),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text(
+                'Sign out',
+                style: TextStyle(
+                    color: Colors.lightBlue.shade400,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 0.6),
+              ),
+              onTap: () {
+                BlocProvider.of<AuthBloc>(context).add(AuthLoggedOut());
+              },
+            ),
+            Divider(),
+          ],
+        ),
       ),
     );
   }
