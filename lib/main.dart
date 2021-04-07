@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:joke_app/blocs/authentication/auth_bloc.dart';
 import 'package:joke_app/blocs/bloc_observer.dart';
+import 'package:joke_app/blocs/cubit/internet_cubit.dart';
 import 'package:joke_app/blocs/joke/joke_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:joke_app/data/data_providers/joke_api.dart';
@@ -26,17 +28,19 @@ void main() async {
     ..init(directory.path)
     ..registerAdapter(SavedJokeAdapter());
   await Hive.openBox<SavedJoke>('jokes');
-  
+
   final UserRepository userRepository = UserRepository();
   runApp(MyApp(
     userRepository: userRepository,
+    connectivity: Connectivity(),
   ));
 }
 
 class MyApp extends StatelessWidget {
   final UserRepository _userRepository;
+  final Connectivity connectivity;
 
-  const MyApp({UserRepository userRepository})
+  const MyApp({UserRepository userRepository, this.connectivity})
       : _userRepository = userRepository;
 
   @override
@@ -45,13 +49,16 @@ class MyApp extends StatelessWidget {
     final JokesRepository jokesRepository = JokesRepository(jokeApi: jokeApi);
     return MultiBlocProvider(
         providers: [
+          BlocProvider<InternetCubit>(
+              create: (context) => InternetCubit(connectivity: connectivity)),
           BlocProvider(
-              create: (BuildContext context) => AuthBloc(
+              create: (context) => AuthBloc(
                     userRepository: _userRepository,
                   )..add(AuthStarted())),
           BlocProvider(
-            create: (BuildContext context) =>
-                JokeBloc(jokeRepository: jokesRepository),
+            create: (context) => JokeBloc(
+              jokeRepository: jokesRepository,
+            ),
           )
         ],
         child: MaterialApp(

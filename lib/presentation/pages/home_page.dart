@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:joke_app/blocs/authentication/auth_bloc.dart';
+import 'package:joke_app/blocs/cubit/internet_cubit.dart';
 import 'package:joke_app/blocs/joke/joke_bloc.dart';
 import 'package:joke_app/data/models/saved_joke.dart';
 import 'package:joke_app/presentation/pages/saved_jokes_page.dart';
@@ -31,33 +32,42 @@ class HomePage extends StatelessWidget {
         children: [
           BlocBuilder<JokeBloc, JokeState>(
               builder: (BuildContext context, JokeState state) {
-            if (state is JokeLoadingError) {
-              return JokeCard(
-                text: 'oops, Something went wrong! check your internet.',
-                color: Colors.redAccent.shade400,
-              );
-            } else if (state is JokeLoadingState) {
-              return Center(
-                child: _buildShimmer(),
-              );
-            } else if (state is JokeLoadedState) {
-              return JokeCard(
-                text: BlocProvider.of<JokeBloc>(context).joke.joke,
-                color: Colors.lightBlue.shade500,
-              );
-            } else {
-              return JokeCard(
-                text: 'You wanna read a joke ? Tap the button below.',
-                color: Colors.lightBlue.shade500,
-              );
-            }
+            return BlocBuilder<InternetCubit, InternetState>(
+              builder: (_, internetState) {
+                if (internetState is InternetDisconnected) {
+                  return JokeCard(
+                    text: 'You are not Connected to the internet!'
+                          + 'You can read your saved jokes',
+                    color: Colors.redAccent.shade400,
+                  );
+                } else if (state is JokeLoadingError) {
+                  return JokeCard(
+                    text: 'oops, Something went wrong! Try again',
+                    color: Colors.redAccent.shade400,
+                  );
+                } else if (state is JokeLoadingState) {
+                  return Center(
+                    child: _buildShimmer(),
+                  );
+                } else if (state is JokeLoadedState) {
+                  return JokeCard(
+                    text: BlocProvider.of<JokeBloc>(context).joke.joke,
+                    color: Colors.lightBlue.shade500,
+                  );
+                } else {
+                  return JokeCard(
+                    text: 'You wanna read a joke ? Tap the button below.',
+                    color: Colors.lightBlue.shade500,
+                  );
+                }
+              },
+            );
           }),
           SizedBox(height: 24),
           _getJokeButton(context),
           SizedBox(
             height: 12,
           ),
-
           /////////// Save to local db(hive)
           _savebutton(jokesBox, context),
         ],
