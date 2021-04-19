@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(SnackBar(
-              backgroundColor: Colors.lightBlue.shade400,
+              backgroundColor: Color(0xff150e56),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -137,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
           height: 50,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.lightBlue.shade400,
+              color: Color(0xff150e56),
               borderRadius: BorderRadius.circular(8)),
           child: Text(
             'Login',
@@ -164,7 +164,7 @@ class _LoginFormState extends State<LoginForm> {
           Text(
             'Create an account',
             style: TextStyle(
-              color: Colors.lightBlue.shade400,
+              color: Color(0xff150e56),
             ),
           )
         ],

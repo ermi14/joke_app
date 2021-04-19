@@ -32,7 +32,7 @@ class SignupPage extends StatelessWidget {
                 CurvedWidget(
                   child: Container(
                     padding: const EdgeInsets.only(top: 100, left: 30),
-                    color: Colors.lightBlue.shade300,
+                    color: Color(0xff150e56),
                     width: double.infinity,
                     height: 300,
                     child: Text(

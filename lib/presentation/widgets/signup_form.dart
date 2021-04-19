@@ -58,7 +58,7 @@ class _SignupFormState extends State<SignupForm> {
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(SnackBar(
-              backgroundColor: Colors.lightBlue.shade400,
+              backgroundColor: Color(0xff150e56),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -152,7 +152,7 @@ class _SignupFormState extends State<SignupForm> {
           height: 50,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.lightBlue.shade400,
+              color: Color(0xff150e56),
               borderRadius: BorderRadius.circular(8)),
           child: Text(
             'Sign Up',
